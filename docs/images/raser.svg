@@ -11,9 +11,9 @@
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
    id="svg8"
    version="1.1"
-   viewBox="0 0 210 297"
-   height="297mm"
-   width="210mm">
+   viewBox="0 0 50.062805 9.0550991"
+   height="9.0550995mm"
+   width="50.062805mm">
   <defs
      id="defs2">
     <rect
@@ -25,17 +25,17 @@
   </defs>
   <sodipodi:namedview
      inkscape:window-maximized="0"
-     inkscape:window-y="102"
-     inkscape:window-x="3584"
-     inkscape:window-height="1174"
+     inkscape:window-y="203"
+     inkscape:window-x="2059"
+     inkscape:window-height="855"
      inkscape:window-width="1252"
      showgrid="false"
      inkscape:document-rotation="0"
-     inkscape:current-layer="layer1-0"
+     inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="524.39736"
-     inkscape:cx="411.17954"
-     inkscape:zoom="2.7339164"
+     inkscape:cy="9.5568021"
+     inkscape:cx="83.929968"
+     inkscape:zoom="4.8529501"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -50,47 +50,43 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      id="layer1"
      inkscape:groupmode="layer"
-     inkscape:label="Layer 1">
-    <g
-       id="layer1-0"
-       inkscape:label="Layer 1"
-       transform="translate(37.897089,12.268013)">
-      <text
-         transform="matrix(0.92478637,0,0,0.82877495,4.4272737,18.827883)"
-         style="font-style:normal;font-weight:normal;font-size:12.69999999999999929px;line-height:1.85;font-family:sans-serif;white-space:pre;shape-inside:url(#rect12);fill:#000080;fill-opacity:1;stroke:none;"
-         id="text10"
-         xml:space="preserve"><tspan
-           x="30.238281"
-           y="113.67003"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Optima;-inkscape-font-specification:Optima;fill:none">RASER</tspan></tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000080;fill-opacity:1;stroke:none;stroke-width:0.264583"
+     inkscape:label="Layer 1"
+     transform="translate(-31.381281,-104.80543)">
+    <text
+       transform="matrix(0.92478637,0,0,0.82877495,4.4272737,18.827883)"
+       style="font-style:normal;font-weight:normal;font-size:12.69999999999999929px;line-height:1.85;font-family:sans-serif;white-space:pre;shape-inside:url(#rect12);fill:#000080;fill-opacity:1;stroke:none;"
+       id="text10"
+       xml:space="preserve"><tspan
+         x="30.238281"
+         y="113.67003"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Optima;-inkscape-font-specification:Optima;fill:#ffffff">RASER</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;fill:#000080;fill-opacity:1;stroke:none;stroke-width:0.264583;"
+       x="59.416969"
+       y="102.16251"
+       id="text23"><tspan
+         sodipodi:role="line"
+         id="tspan21"
          x="59.416969"
          y="102.16251"
-         id="text23"><tspan
-           sodipodi:role="line"
-           id="tspan21"
-           x="59.416969"
-           y="102.16251"
-           style="fill:#000080;stroke-width:0.264583" /><tspan
-           sodipodi:role="line"
-           x="59.416969"
-           y="115.39164"
-           style="fill:#000080;stroke-width:0.264583"
-           id="tspan25" /><tspan
-           sodipodi:role="line"
-           x="59.416969"
-           y="128.62076"
-           style="fill:#000080;stroke-width:0.264583"
-           id="tspan27" /></text>
-    </g>
+         style="stroke-width:0.264583;fill:#000080;" /><tspan
+         sodipodi:role="line"
+         x="59.416969"
+         y="115.39164"
+         style="stroke-width:0.264583;fill:#000080;"
+         id="tspan25" /><tspan
+         sodipodi:role="line"
+         x="59.416969"
+         y="128.62076"
+         style="stroke-width:0.264583;fill:#000080;"
+         id="tspan27" /></text>
   </g>
 </svg>

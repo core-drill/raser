@@ -2,6 +2,7 @@ name: "RASER"
 title: "RASER"
 description: "RASER Home Page"
 
+
 encoding: utf-8
 timezone: Asia/Shanghai
 
@@ -11,7 +12,6 @@ collections:
     output: true
   posts:
     permalink: "/news/:year/:month/:day/:title/"
-    output: true
 
 defaults:
   - scope:
@@ -24,6 +24,7 @@ defaults:
       type: posts
     values:
       layout: news_item
+
 plugins:
   - jekyll-avatar
 sass:

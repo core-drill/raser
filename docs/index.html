@@ -31,17 +31,36 @@ layout: default
 
 <article class="chapter">
   <h1>
-    RAdiation SEmiconductoR - RASER!
+    Welcome to RASER Home!
   </h1>
   <hr>
 
   <div class="content">
 
+  <h4>Goal</h4>
     <li>
-      Goal: Develop radiation hard semiconductor for HEP experiment and beyond.
+      Develop radiation hard semiconductor for HEP experiment and beyond.
+    </li>
+
+    <h4>Software</h4>
+    <li> 
+      <a href=https://pypi.org/project/raser/>https://pypi.org/project/raser/</a>
     </li>
 
   </div>
+
+  <h4>Recent News</h4>
+  <ul>
+    {% for post in site.posts limit:5 %}
+    <li class="{% if page.title == post.title %}current{% endif %}">
+        <a href="{{ post.url }}">{{ post.date | date_to_string }} - {{ post.title }}</a>
+        {{ post.excerpt }} 
+        {% if post.excerpt != post.content %}
+        <a href="{{ site.baseurl }}{{ post.url }}">[Read more]</a>
+        {% endif %}
+    </li>
+    {% endfor %} 
+  </ul>
 
 </article>
 

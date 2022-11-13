@@ -11,7 +11,6 @@ collections:
     output: true
   posts:
     permalink: "/news/:year/:month/:day/:title/"
-    output: true
 
 defaults:
   - scope:
@@ -24,6 +23,7 @@ defaults:
       type: posts
     values:
       layout: news_item
+
 plugins:
   - jekyll-avatar
 sass:

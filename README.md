@@ -23,7 +23,7 @@ Dependences
 Documentation 
 ======
 
-[X-Team/RASER](http://xteam.ihep.ac.cn/research/rd50/raser)
+[User Guide](http://raser.team/docs/raser)
 
 
 Contribution 

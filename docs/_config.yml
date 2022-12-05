@@ -24,8 +24,6 @@ defaults:
     values:
       layout: news_item
 
-plugins:
-  - jekyll-avatar
 sass:
   style: compressed
 

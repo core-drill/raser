@@ -19,11 +19,6 @@ layout: default
     <span class="post-date">
       {{ page.date | date_to_string }}
     </span>
-    {% assign author = page.author %}
-    <a href="https://github.com/{{ author }}" class="post-author">
-      {% avatar user=author size=24 %}
-      {{ author }}
-    </a>
   </div>
   <div class="post-content">
     {{ content }}

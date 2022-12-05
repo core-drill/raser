@@ -1,6 +1,5 @@
 ---
 title: LGAD Radiation Damage Model
-author: xshi 
 excerpt_separator:  <!--more--> 
 ---
 

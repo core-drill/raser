@@ -31,7 +31,7 @@ class Particles:
             2021/09/02
         """	
         g4_dic = dset.pygeant4
-        my_g4d = MyDetectorConstruction(my_d,my_f,g4_dic['name'],g4_dic['maxstep'])		
+        my_g4d = MyDetectorConstruction(my_d,my_f,g4_dic['det_model'],g4_dic['maxstep'])		
         if g4_dic['g4_vis']: 
             ui = None
             ui = g4b.G4UIExecutive(len(sys.argv), sys.argv)
@@ -45,7 +45,7 @@ class Particles:
         physics_list.SetVerboseLevel(1)
         physics_list.RegisterPhysics(g4b.G4StepLimiterPhysics())
         gRunManager.SetUserInitialization(physics_list)
-        # define golbal parameter
+        # define global parameter
         global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps,s_events_angle
         s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps,s_events_angle=[],[],[],[],[]
 
@@ -66,10 +66,12 @@ class Particles:
         if g4_dic['g4_vis']:  
             ui.SessionStart()
         self.p_steps=s_p_steps
+        self.init_tz_device = my_g4d.init_tz_device
+        self.p_steps_current=[[[single_step[0],single_step[1],single_step[2]-self.init_tz_device]\
+            for single_step in p_step] for p_step in self.p_steps]
         self.energy_steps=s_energy_steps
         self.edep_devices=s_edep_devices
         self.events_angle=s_events_angle
-        self.init_tz_device = my_g4d.init_tz_device
         del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps,s_events_angle
         
     def __del__(self):
@@ -97,7 +99,7 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
             device_x = (my_f.sx_r-my_f.sx_l)*g4b.um 
             device_y = (my_f.sy_r-my_f.sy_l)*g4b.um
             device_z = my_d.l_z*g4b.um
-        elif "planar3D" in sensor_model:
+        elif "planar3D" or "lgad3D" in sensor_model:
             tz_Si = 10000*g4b.um
             tz_device = my_d.l_z/2.0*g4b.um
             self.init_tz_device = 0
@@ -169,18 +171,6 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
                                 material_Si = "Si",
                                 material_O = "O",
                                 colour = [0,0.5,0.8],   
-                                mother = 'world')
-
-        if "plugin3D" in sensor_model:
-            self.create_sic_box(
-                                name = "SiC_sub",
-                                sidex = my_d.l_x*g4b.um,
-                                sidey = my_d.l_y*g4b.um,
-                                sidez = 350.0*g4b.um,
-                                translation = [tx_all,ty_all,-175.0*g4b.um],
-                                material_Si = "Si",
-                                material_c = "C",
-                                colour = [0,1,1],
                                 mother = 'world')
         self.maxStep = maxStep*g4b.um
         self.fStepLimit = g4b.G4UserLimits(self.maxStep)
@@ -293,7 +283,7 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
         return self.physical['world']
 
     def __del__(self):
-        print("use __del__ to delete the MyDetectorConstruction class ")
+        print("using __del__ to delete the MyDetectorConstruction class ")
 
 
 class MyPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
@@ -370,7 +360,7 @@ class MyEventAction(g4b.G4UserEventAction):
 
     def EndOfEventAction(self, event):
         eventID = event.GetEventID()
-        print("eventID:%s"%eventID)
+        #print("eventID:%s"%eventID)
         if len(self.p_step):
             point_a = [ b-a for a,b in zip(self.point_in,self.point_out)]
             point_b = [ c-a for a,c in zip(self.point_in,self.p_step[-1])]
@@ -402,15 +392,15 @@ def save_geant4_events(eventID,edep_device,p_step,energy_step,event_angle):
         s_events_angle.append(event_angle)
 
 def cal_angle(point_a,point_b):
-    "Calculate the anlgle of point a and b"
+    "Calculate the angle between point a and b"
     x=np.array(point_a)
     y=np.array(point_b)
     l_x=np.sqrt(x.dot(x))
     l_y=np.sqrt(y.dot(y))
-    dian=x.dot(y)
+    dot_product=x.dot(y)
     if l_x*l_y > 0:
-        cos_=dian/(l_x*l_y)
-        angle_d=np.arccos(cos_)*180/np.pi
+        cos_angle_d=dot_product/(l_x*l_y)
+        angle_d=np.arccos(cos_angle_d)*180/np.pi
     else:
         angle_d=9999
     return angle_d

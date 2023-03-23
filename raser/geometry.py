@@ -9,21 +9,19 @@
 import ROOT
 import math
 import sys
-from raser.model import Material
 
 #Detector structure
 class R3dDetector:
     def __init__(self,dset):
         """
         Description:
-            Differnet types detectors parameters assignment.
+            Different types detectors parameters assignment.
         Parameters:
         ---------
         det_dic : dictionary
             Contain all detector parameters 
-        meter : int
-            mater = 1, SiC
-            mater = 0, Si          
+        material : string
+            name of the material
         Modify:
         ---------
             2021/09/02
@@ -32,59 +30,136 @@ class R3dDetector:
         self.l_x = det_dic['lx'] 
         self.l_y = det_dic['ly']  
         self.l_z = det_dic['lz'] 
-        if det_dic['name'] == "lgad3D":
-            pass
+        
+        self.voltage = det_dic['voltage'] 
+        self.temperature = det_dic['temp']
+        self.steplength = det_dic['steplength']
+        self.material = det_dic['material']
+        self.det_model = det_dic['det_model']
+
+        if self.det_model == "lgad3D":
+            self.avalanche_model = det_dic['avalanche_model']
+
+            self.part = det_dic['part']
+            if self.part == 2:
+                self.avalanche_bond = det_dic['avalanche_bond']
+                self.doping1 = det_dic['doping1']
+                self.doping2 = det_dic['doping2']
+            elif self.part == 3:
+                self.control_bond = det_dic['control_bond']
+                self.avalanche_bond = det_dic['avalanche_bond']
+                self.doping1 = det_dic['doping1']
+                self.doping2 = det_dic['doping2']
+                self.doping3 = det_dic['doping3']
+            else:
+                raise ValueError
         else:
             self.d_neff = det_dic['doping'] 
-        self.v_voltage = det_dic['voltage'] 
-        self.temperature = det_dic['temp']
-        self.det_model = dset.det_model
-        self.mater = 1
-        self.current_define()
-        if 'plugin3D' in self.det_model and det_dic['custom_electron'] == "False":
-            self.e_ir = det_dic['e_ir'] 
-            self.set_3D_electrode(det_dic['e_ir'],det_dic['e_gap'])
-        elif det_dic['custom_electron'] == "True":
+            
+        if 'plugin3D' in self.det_model: 
+            self.e_r = det_dic['e_r']
             self.e_gap = det_dic['e_gap']
-            self.e_tr = dset.electron_customs
+            if det_dic['custom_electrode'] == "False":
+                self.set_3D_electrode(det_dic['e_r'],det_dic['e_gap'])
+            elif det_dic['custom_electrode'] == "True":
+                self.e_tr = dset.electron_customs
+        else:
+            self.v_FD, self.depletion_depth = self.full_depletion_voltage()
+            print (self.v_FD,self.depletion_depth)
 
+        if self.det_model == "planarRing":
+            self.e_r_inner = det_dic['e_r_inner']
+            self.e_r_outer = det_dic['e_r_outer']
 
-    def current_define(self):
-        """
-        @description: 
-            Parameter current setting     
-        @param:
-            matter -- 0 is silicon, 1 is silicon carbide
-            positive_cu -- Current from holes move
-            negative_cu -- Current from electrons move
-            sum_cu -- Current from e-h move
-        @Returns:
-            None
-        @Modify:
-            2021/08/31
-        """
-        self.t_bin = 50e-12
-        self.t_end = 6.0e-9
-        self.t_start = 0
-        self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
+    def full_depletion_voltage(self):
+        if self.material == 'Si':
+            perm_mat = 11.7  
+        elif self.material == 'SiC':
+            perm_mat = 9.76  
+        else:
+            raise NameError(self.material)
+             
+        e0 = 1.60217733e-19
+        perm0 = 8.854187817e-12   #F/m
+
+        if self.det_model != "lgad3D":
+            z1 = self.l_z
+            c1 = -e0*self.d_neff*1e6/perm0/perm_mat
+            v_FD = c1 * (z1**2 / 2)
+        else:
+            if self.part == 2:
+                z1 = self.avalanche_bond
+                z2 = self.l_z - self.avalanche_bond
+                c1 = -e0*self.doping1*1e6/perm0/perm_mat
+                c2 = -e0*self.doping2*1e6/perm0/perm_mat
+                v_FD = c1 * (z1**2 / 2)\
+                     + c2 * z2 * z1 \
+                     + c2 * (z2**2 / 2)
+
+            elif self.part == 3:
+                z1 = self.control_bond
+                z2 = self.avalanche_bond - self.control_bond
+                z3 = self.l_z - self.avalanche_bond
+                c1 = -e0*self.doping1*1e6/perm0/perm_mat
+                c2 = -e0*self.doping2*1e6/perm0/perm_mat
+                c3 = -e0*self.doping3*1e6/perm0/perm_mat
+                v_FD = c1 * (z1**2 / 2)\
+                     + c2 * z2 * z1 \
+                     + c2 * (z2**2 / 2)\
+                     + c3 * z3 * z1\
+                     + c3 * z3 * z2\
+                     + c3 * (z3**2 / 2)
         
-        self.positive_cu = ROOT.TH1F("charge+", "Positive Current",
-                                     self.n_bin, self.t_start, self.t_end)
-        self.negative_cu = ROOT.TH1F("charge-", "Negative Current",
-                                     self.n_bin, self.t_start, self.t_end)
-        self.gain_positive_cu = ROOT.TH1F("gain_charge+","Current Contribution",
-                                     self.n_bin, self.t_start, self.t_end)
-        self.gain_negative_cu = ROOT.TH1F("gain_charge-","Gain Negative Current",
-                                     self.n_bin, self.t_start, self.t_end)
-        self.sum_cu = ROOT.TH1F("charge","Total Current",
-                                self.n_bin, self.t_start, self.t_end)
+        if abs(v_FD) < abs(self.voltage):
+            depletion_depth = self.l_z
+        else:
+            if self.det_model != "lgad3D":
+                depletion_depth = (2*abs(self.voltage/c1))**0.5 - 1
+            else:
+                if self.part == 2:
+                    c = abs(self.voltage) - abs(c1 * (z1**2 / 2))
+                    if c < 0:
+                        raise ValueError(self.voltage)
+                    
+                    for i in range(101):
+                        z = self.l_z
+                        a = self.avalanche_bond
+                        d = a + i*(z-a)/100
+                        if abs(c1 * (z1**2 / 2)\
+                         + c2 * d * z1 \
+                         + c2 * (d**2 / 2)) > abs(v_FD):
+                            depletion_depth = d-1.5
+                        break
 
-    def set_3D_electrode(self,e_ir,e_gap=0):
+                elif self.part == 3:
+                    c = abs(self.voltage)\
+                        - abs(c1 * (z1**2 / 2)\
+                        + c2 * z2 * z1 \
+                        + c2 * (z2**2 / 2))
+                    if c < 0:
+                        raise ValueError(self.voltage)
+                    
+                    for i in range(101):
+                        z = self.l_z
+                        a = self.avalanche_bond
+                        d = a + i*(z-a)/100
+                        if abs(c1 * (z1**2 / 2)\
+                         + c2 * z2 * z1 \
+                         + c2 * (z2**2 / 2)\
+                         + c3 * d * z1\
+                         + c3 * d * z2\
+                         + c3 * (d**2 / 2)) > abs(v_FD):
+                            depletion_depth = d-1.5
+                        break
+
+        return v_FD, depletion_depth
+
+    def set_3D_electrode(self,e_r,e_gap=0):
         """
         @description: 
             3D plug-in detector electrodes setting     
         @param:
-            e_ir -- The radius of electrode
+            e_r -- The radius of electrode
             e_gap -- The spacing between the electrodes  
         @Returns:
             None
@@ -92,7 +167,6 @@ class R3dDetector:
             2021/08/31
         """
         self.e_gap = e_gap
-        e_r = e_ir  
         e_int = e_gap 
         e_t_y = self.infor_ele(e_r,e_int)
         self.e_tr=[]
@@ -121,10 +195,28 @@ class R3dDetector:
         """
         e_x_gap = self.l_x - 2*e_r - 2*e_int
         if e_x_gap < 0:
-            print("the electrode at x position is large than sensor length")
+            print("the electrode at x position is larger than sensor length")
             sys.exit(0)
         e_t_y = math.sqrt(e_int*e_int*0.75)
         if 2*e_t_y > self.l_y:
-            print("the electrode at y position is large than sensor length")
+            print("the electrode at y position is larger than sensor length")
             sys.exit(0)            
         return e_t_y
+
+    def Neff(self,z):
+        if self.det_model == "lgad3D":
+            if self.part == 2:
+                if (z < self.avalanche_bond):
+                    Neff = self.doping1
+                else:
+                    Neff = self.doping2
+            elif self.part == 3:
+                if (z < self.control_bond):
+                    Neff = self.doping1
+                elif (z > self.avalanche_bond):
+                    Neff = self.doping3
+                else:
+                    Neff = self.doping2
+        else:
+            Neff = self.d_neff
+        return Neff

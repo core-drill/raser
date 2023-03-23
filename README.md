@@ -18,27 +18,13 @@ Dependences
 - [ROOT](https://root.cern.ch) 
 - [Geant4](https://geant4.web.cern.ch)
 - [FEniCS](https://fenicsproject.org)
+- [DEVSIM](https://devsim.org)
 
 
 Documentation 
 ======
 
 [User Guide](http://raser.team/docs/raser)
-
-
-Contribution 
-====== 
-* Xin Shi, IHEP, @xshi
-* Yuhang Tan, IHEP, @tanyh2018
-* Tao Yang, IHEP, @yangtaogit
-* Kai Liu, IHEP, @liukaihep
-* Ryuta Kiuchi, IHEP, @rkiuchi
-* Jianing Lin, Jilin U, @zombastar
-* Yu Zhao, Liaoning U, @zylyz18
-* Ziyi Zhao, Hunan Normal U, @zhaoziyi1
-* Jia Wang, Hunan Normal U, @wangjia0203 
-* Chenxi Fu, Jilin U, @heheda2001123
-  
 
 
 [pypi-image]: https://img.shields.io/pypi/v/raser.svg

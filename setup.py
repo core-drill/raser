@@ -11,16 +11,15 @@ with open("README.md", "r") as fh:
 
 setup(
     name="raser",
-    version="3.1.0",
+    version="3.2.0",
     author="Xin Shi",
     author_email="Xin.Shi@outlook.com",
     description="SiC Detector Simulation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/dt-np/raser",
     project_urls={
-        "Bug Tracker": "https://github.com/dt-np/raser/issues",
-        "Documentation": "http://xteam.ihep.ac.cn/research/rd50/raser/",
+        "Bug Tracker": "https://github.com/raser-team/raser/issues",
+        "Documentation": "http://raser.team/docs/raser/",
     }, 
     packages=find_packages(),
     license='MIT',

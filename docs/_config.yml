@@ -11,6 +11,7 @@ collections:
     output: true
   posts:
     permalink: "/news/:year/:month/:day/:title/"
+    output: true 
 
 defaults:
   - scope:
